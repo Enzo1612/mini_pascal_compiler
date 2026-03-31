@@ -56,27 +56,35 @@ void generateCodFile(const VirtualMachine &vm, const std::string &sourceFilename
 
     std::ofstream outFile(outName);
     if (!outFile.is_open())
-    {
-        std::cerr << "Architecture Error: Could not create output file " << outName << "\n";
         return;
-    }
 
-    // Write assembly instr
     for (int i = 0; i < vm.PC; i++)
     {
         int op = vm.InstructionMemory[i];
         outFile << decodeInstruction(op);
 
-        if (op == 11) // PUSH operation requires its operand
+        if (op == 11) // PUSH
         {
             i++;
             outFile << " " << vm.InstructionMemory[i];
+        }
+        else if (op == 9) // WRITE_STR
+        {
+            outFile << " '";
+            i++;
+            int ch = vm.InstructionMemory[i];
+            while (ch != 10) // END_STR
+            {
+                outFile << static_cast<char>(ch);
+                i++;
+                ch = vm.InstructionMemory[i];
+            }
+            outFile << "' END_STR";
         }
         outFile << "\n";
     }
 
     outFile.close();
-    std::cout << "Bytecode successfully exported to " << outName << "\n";
 }
 
 int main()
@@ -108,6 +116,19 @@ int main()
         {
             i++;
             std::cout << " " << vm.InstructionMemory[i];
+        }
+        else if (op == 9) // WRITE_STR
+        {
+            std::cout << " '";
+            i++;
+            int ch = vm.InstructionMemory[i];
+            while (ch != 10) // END_STR OpCode 10
+            {
+                std::cout << static_cast<char>(ch);
+                i++;
+                ch = vm.InstructionMemory[i];
+            }
+            std::cout << "' END_STR";
         }
         std::cout << "\n";
     }
