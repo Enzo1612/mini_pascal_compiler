@@ -42,6 +42,10 @@ std::string decodeInstruction(int code)
         return "LOAD";
     case 13:
         return "HALT";
+    case 14:
+        return "JMP";
+    case 15:
+        return "JMPZ";
     default:
         return std::to_string(code);
     }
@@ -89,7 +93,7 @@ void generateCodFile(const VirtualMachine &vm, const std::string &sourceFilename
 
 int main()
 {
-    std::string sourceFile = "test.pas";
+    std::string sourceFile = "test2.pas";
     SymbolTable symTab;
     VirtualMachine vm;
     Lexer lexer(sourceFile);

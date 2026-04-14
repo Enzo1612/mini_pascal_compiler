@@ -16,7 +16,9 @@ enum class OpCode
     END_STR = 10,
     PUSH = 11,
     LOAD = 12,
-    HALT = 13
+    HALT = 13,
+    JMP = 14,
+    JMPZ = 15
 };
 
 struct VirtualMachine

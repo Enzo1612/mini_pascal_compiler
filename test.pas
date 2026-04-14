@@ -1,4 +1,4 @@
-PROGRAM myApp; {this is a {nested} comment}
+PROGRAM myApp; {this is a {nested CHECK DOUBLE APOSTROPHE ''} comment}
 CONST
 	x = 'a',
 	b = 2;

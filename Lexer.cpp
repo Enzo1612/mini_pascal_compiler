@@ -237,4 +237,9 @@ void Lexer::initKeywords()
     m_keywords["VAR"] = TokenType::VAR;
     m_keywords["WRITE"] = TokenType::WRITE;
     m_keywords["READ"] = TokenType::READ;
+    m_keywords["IF"] = TokenType::IF;
+    m_keywords["THEN"] = TokenType::THEN;
+    m_keywords["ELSE"] = TokenType::ELSE;
+    m_keywords["WHILE"] = TokenType::WHILE;
+    m_keywords["DO"] = TokenType::DO;
 }

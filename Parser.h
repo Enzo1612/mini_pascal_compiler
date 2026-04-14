@@ -27,6 +27,8 @@ private:
     bool varDecl();
     bool block();
     bool instruction();
+    bool ifStatement();
+    bool whileStatement();
     bool assignment();
     bool read();
     bool write();

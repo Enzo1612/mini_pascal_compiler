@@ -94,6 +94,22 @@ void interpret(VirtualMachine &vm)
             vm.PC++;
             break;
 
+        case OpCode::JMP:
+            vm.PC = vm.InstructionMemory[vm.PC + 1];
+            break;
+
+        case OpCode::JMPZ:
+            if (vm.ExecutionStack[vm.SP] == 0)
+            {
+                vm.PC = vm.InstructionMemory[vm.PC + 1];
+            }
+            else
+            {
+                vm.PC += 2;
+            }
+            vm.SP--;
+            break;
+
         case OpCode::HALT:
             return;
 

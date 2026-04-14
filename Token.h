@@ -17,6 +17,12 @@ enum class TokenType
     VAR,
     WRITE,
     READ,
+    // CONTROL
+    IF,
+    THEN,
+    ELSE,
+    WHILE,
+    DO,
     // DATA
     STRING,
     INTEGER,

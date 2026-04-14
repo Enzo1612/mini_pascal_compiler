@@ -187,6 +187,10 @@ bool Parser::instruction()
         return write();
     case TokenType::BEGIN:
         return block();
+    case TokenType::IF:
+        return ifStatement();
+    case TokenType::WHILE:
+        return whileStatement();
     default:
         std::cout << "Syntax Error: Expected instruction at line " << m_currentToken.line << "\n";
         return false;
@@ -447,4 +451,74 @@ bool Parser::term()
 void Parser::emit(int instruction)
 {
     m_vm.InstructionMemory[m_vm.PC++] = instruction;
+}
+
+bool Parser::whileStatement()
+{
+    if (!eat(TokenType::WHILE))
+        return false;
+
+    // Mark top to jump back
+    int loopStartIndex = m_vm.PC;
+
+    if (!expression())
+        return false;
+    if (!eat(TokenType::DO))
+        return false;
+
+    // Jump with zero + placeholder
+    emit(static_cast<int>(OpCode::JMPZ));
+    int jumpOutIndex = m_vm.PC;
+    emit(0);
+
+    if (!instruction())
+        return false;
+
+    // Jump to eval expr
+    emit(static_cast<int>(OpCode::JMP));
+    emit(loopStartIndex);
+
+    // backpatch
+    m_vm.InstructionMemory[jumpOutIndex] = m_vm.PC;
+
+    return true;
+}
+
+bool Parser::ifStatement()
+{
+    if (!eat(TokenType::IF))
+        return false;
+    if (!expression())
+        return false;
+    if (!eat(TokenType::THEN))
+        return false;
+
+    emit(static_cast<int>(OpCode::JMPZ));
+    int jumpElseIndex = m_vm.PC;
+    emit(0);
+
+    if (!instruction())
+        return false;
+
+    if (m_currentToken.type == TokenType::ELSE)
+    {
+        eat(TokenType::ELSE);
+
+        emit(static_cast<int>(OpCode::JMP));
+        int jumpEndIndex = m_vm.PC;
+        emit(0);
+
+        m_vm.InstructionMemory[jumpElseIndex] = m_vm.PC;
+
+        if (!instruction())
+            return false;
+
+        m_vm.InstructionMemory[jumpEndIndex] = m_vm.PC;
+    }
+    else
+    {
+        m_vm.InstructionMemory[jumpElseIndex] = m_vm.PC;
+    }
+
+    return true;
 }
